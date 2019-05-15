@@ -30,6 +30,6 @@ diff -ru esutil-0.6.2.5-orig/esutil/unit_tests/htm_tests.py esutil-0.6.2.5/esuti
  
 +    def test_pickle(self):
 +        h = htm.HTM(5)
-+        pickled = pickle.dumps(h, protocol=pickle.HIGHEST_PROTOCOL)
++        pickled = pickle.dumps(h)
 +        result = pickle.loads(pickled)
 +        self.assertEqual(h.get_depth(), result.get_depth())
