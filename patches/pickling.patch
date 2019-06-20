@@ -1,0 +1,35 @@
+Only in esutil-0.6.2.5: build
+diff -ru esutil-0.6.2.5-orig/esutil/htm/htm.py esutil-0.6.2.5/esutil/htm/htm.py
+--- esutil-0.6.2.5-orig/esutil/htm/htm.py	2017-09-25 08:28:03.000000000 -0700
++++ esutil-0.6.2.5/esutil/htm/htm.py	2019-05-09 12:52:34.670264752 -0700
+@@ -689,6 +689,11 @@
+         else:
+             return counts
+ 
++    def __reduce__(self):
++        """To support pickle/unpickle: only depth matters"""
++        return (HTM, (self.get_depth(), ))
++
++
+ class Matcher(htmc.Matcher):
+     """
+     Object to match arrays of ra,dec
+diff -ru esutil-0.6.2.5-orig/esutil/unit_tests/htm_tests.py esutil-0.6.2.5/esutil/unit_tests/htm_tests.py
+--- esutil-0.6.2.5-orig/esutil/unit_tests/htm_tests.py	2017-09-25 08:28:03.000000000 -0700
++++ esutil-0.6.2.5/esutil/unit_tests/htm_tests.py	2019-05-09 12:51:17.816882703 -0700
+@@ -1,5 +1,6 @@
+ from __future__ import with_statement, print_function
+ import sys, os
++import pickle
+ import tempfile
+ import warnings
+ import numpy
+@@ -197,3 +198,8 @@
+                         "expected %s counts in bincount "
+                         "with array scale, got %s" % (counts_truth,counts))
+ 
++    def test_pickle(self):
++        h = htm.HTM(5)
++        pickled = pickle.dumps(h)
++        result = pickle.loads(pickled)
++        self.assertEqual(h.get_depth(), result.get_depth())
